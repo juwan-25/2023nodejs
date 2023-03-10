@@ -7,3 +7,6 @@ const renjun = {
 console.log(renjun);
 console.log(renjun.name);
 console.log(renjun["name"]);
+
+delete renjun.age;
+console.log(renjun);
