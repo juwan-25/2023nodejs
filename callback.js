@@ -7,6 +7,8 @@ function fuuc_callback() {
 function func_one(callback) {
     console.log("함수 실행");
     callback();
+    //callback 함수 실행
+    callback``;
 }
 
 func_one(fuuc_callback);
