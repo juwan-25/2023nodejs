@@ -8,9 +8,9 @@ console.log(data?.toString());
 readData = data?.toString();
 
 //파일 쓰기
-let data2 = fs.writeFileSync("./writeText.txt",("읽어온 데이터 : "+readData));
+let data2 = fs.writeFileSync("./writeText2.txt",("읽어온 데이터 : "+readData));
 console.log("data2 : "+data2); //return값 없음 : undefined
 
-let data3 = fs.readFileSync("./writeText.txt");
+let data3 = fs.readFileSync("./writeText2.txt");
 console.log(data3?.toString());
 readData = data3?.toString();
