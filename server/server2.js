@@ -4,7 +4,7 @@ const fs = require('fs');
 
 //req : 요청, res :응답 > createSever로 정의
 const server = http.createServer((req, res)=>{
-    fs.readFile("./server2_html.html",(err,data)=>{
+    fs.readFile("./html/server2_html.html",(err,data)=>{
         if(err){
             throw err;
         }

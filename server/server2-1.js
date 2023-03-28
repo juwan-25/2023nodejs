@@ -4,7 +4,7 @@ const fs = require('fs');
 
 const server = http.createServer(async (req, res)=>{
     try{
-        const data = await fs.readFile("./server2_html.html");
+        const data = await fs.readFile("./html/server2_html.html");
         res.writeHead(200, {"Content-Type":"text/html"});
         res.end(data);
     }catch(err){
