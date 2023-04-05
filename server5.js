@@ -30,6 +30,16 @@ const server = http.createServer(async (req, res)=>{
             }
         })
         fileListText += '</ul>';
+        
+        const searchParams = new URL(req.url, "http://localhost:8088").searchParams;
+        console.log("searchParams", searchParams);
+        
+        const param_data = searchParams.get("data") || "null";
+        const fileName = path.join(__dirname, `./textFile/song_${param_data}.txt`);
+        console.log("fileName", param_data,fileName);
+        let fileData = await fs.readFile(fileName);
+        let fileDataString = fileData.toString().replace(/\r/g, '<br>');
+        console.log("텍스트 : ",fileDataString);
 
         const template =`
         <!DOCTYPE html>
@@ -42,6 +52,8 @@ const server = http.createServer(async (req, res)=>{
             <body>
                 <h1><a href="/">노래</a></h1>
                 ${fileListText}
+                <br>
+                ${fileDataString}
             </body>
         </html>
         `
