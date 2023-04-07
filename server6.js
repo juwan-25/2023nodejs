@@ -53,6 +53,14 @@ const server = http.createServer(async (req, res)=>{
                 <p><input type="submit"/></p>
             </form>
         `
+        } else if(pathname == '/update'){
+            subContent = `<form action="update_process" method="post">
+                <input type="hidden" name="id" value="${param_data}"/>
+                <p><input type="text" name="title" placeholder="title" value="${param_data}"/></p>
+                <p><textarea name="description" placeholder="description">${fileData}</textarea></p>
+                <p><input type="submit"/></p>
+            </form>
+        `
         }
 
 
@@ -70,7 +78,7 @@ const server = http.createServer(async (req, res)=>{
                 <br>
                 ${fileDataString}
                 <br>
-                <a href="create">create</a> <a href="/update?id=${title}">update</a>
+                <a href="create">create</a> <a href="/update?data=${param_data}">update</a>
                 ${subContent}
             </body>
         </html>
@@ -79,16 +87,30 @@ const server = http.createServer(async (req, res)=>{
         if(pathname == '/create_process'){
             let body = "";
             req.on('data', function(data){
-                console.log("AKLA",data.toString());
                 body += data;
             });
             req.on('end', function(){
-                console.log("abc",body);
                 const post = qs.parse(body);
                 const title = post.title; //파일 제목
                 const description = post.description;
                 fs.writeFile(path.join(__dirname, `./textFile/song_${title}.txt`), description, 'utf-8', function(err){});
                 console.log("내용",post);
+
+                res.writeHead(302,{Location: `/?data=${encodeURIComponent(title)}`});
+                res.end();
+            });
+        } else if(pathname == '/update_process') {
+            let body = "";
+            req.on('data', function(data){
+                body += data;
+            });
+            req.on('end', async function(){
+                const post = qs.parse(body);
+                const id = post.id; 
+                const title = post.title;
+                const description = post.description;
+                await fs.rename(`./textFile/song_${id}.txt`, `./textFile/song_${title}.txt`)
+                await fs.writeFile(`./textFile/song_${title}.txt`, description, 'utf-8');
 
                 res.writeHead(302,{Location: `/?data=${encodeURIComponent(title)}`});
                 res.end();
