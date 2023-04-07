@@ -55,6 +55,7 @@ const server = http.createServer(async (req, res)=>{
         `
         }
 
+
         const template =`
         <!DOCTYPE html>
         <html lang="en">
@@ -75,8 +76,27 @@ const server = http.createServer(async (req, res)=>{
         </html>
         `
 
-        res.writeHead(200, {"Content-Type":"text/html; charset=utf-8"});
-        res.end(template);
+        if(pathname == '/create_process'){
+            let body = "";
+            req.on('data', function(data){
+                console.log("AKLA",data.toString());
+                body += data;
+            });
+            req.on('end', function(){
+                console.log("abc",body);
+                const post = qs.parse(body);
+                const title = post.title; //파일 제목
+                const description = post.description;
+                fs.writeFile(path.join(__dirname, `./textFile/song_${title}.txt`), description, 'utf-8', function(err){});
+                console.log("내용",post);
+
+                res.writeHead(302,{Location: `/?data=${encodeURIComponent(title)}`});
+                res.end();
+            });
+        } else {
+            res.writeHead(200, {"Content-Type":"text/html; charset=utf-8"});
+            res.end(template);
+        }
 
     }catch(err){
         console.error(err);
