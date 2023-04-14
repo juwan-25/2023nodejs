@@ -76,9 +76,15 @@ const server = http.createServer(async (req, res)=>{
                 <h1><a href="/">노래</a></h1>
                 ${fileListText}
                 <br>
+                <h1>${param_data}</h1>
                 ${fileDataString}
                 <br>
-                <a href="create">create</a> <a href="/update?data=${param_data}">update</a>
+                <input type="button" value="create" onclick='location.href="/create"'>
+                <input type="button" value="update" onclick='location.href="/update?data=${param_data}"'>
+                <form action="delete_process" method="post">
+                    <input type="hidden" name="id" value="${param_data}">
+                    <input type="submit" value="delete">
+                </form>
                 ${subContent}
             </body>
         </html>
@@ -109,10 +115,26 @@ const server = http.createServer(async (req, res)=>{
                 const id = post.id; 
                 const title = post.title;
                 const description = post.description;
-                await fs.rename(`./textFile/song_${id}.txt`, `./textFile/song_${title}.txt`)
-                await fs.writeFile(`./textFile/song_${title}.txt`, description, 'utf-8');
+                // await fs.rename(`./textFile/song_${id}.txt`, `./textFile/song_${title}.txt`)
+                // await fs.writeFile(`./textFile/song_${title}.txt`, description, 'utf-8');
+                await fs.rename(path.join(__dirname,`textFile/song_${id}.txt`), 
+                    path.join(__dirname, `textFile/song_${title}.txt`));
+                await fs.writeFile(`textFile/song_${title}.txt`, description, 'utf-8');
 
                 res.writeHead(302,{Location: `/?data=${encodeURIComponent(title)}`});
+                res.end();
+            });
+        } else if(pathname == '/delete_process') {
+            let body = '';
+            req.on('data', function(data){
+                body += data;
+            });
+            req.on('end', async function(){
+                const post = qs.parse(body);
+                const id = post.id; 
+                console.log("kk", id);
+                await fs.unlink(path.join(__dirname,`textFile/song_${id}.txt`));
+                res.writeHead(302, {Location:'/'});
                 res.end();
             });
         } else {
