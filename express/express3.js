@@ -1,0 +1,13 @@
+const express = require('express');
+const app = express();
+
+app.use((req, res)=>{
+    let name = req.query.name;
+    let area = req.query.area;
+
+    res.send(`<h1>${name} : ${area}</h1>`);
+});
+
+app.listen(3000, ()=>{
+    console.log("서버 실행중... http://localhost:3000//?name=qwer&area=1234");
+});
