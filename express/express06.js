@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded({extended : false}));
 
 app.use(bodyParser.json());
 
-app.use('/public', static(path.join(__dirname, 'public')));
+app.use(static(path.join(__dirname, 'public')));
 
 app.use(cookieParser()); 
 app.use(expressSession({
@@ -26,7 +26,7 @@ app.use(expressSession({
 }));
 
 router.route('/').get(function(req, res) {
-    res.redirect('/public/index.html');
+    res.redirect('/index.html');
 });
 
 router.route('/process/login').post(function(req, res) {
@@ -35,7 +35,7 @@ router.route('/process/login').post(function(req, res) {
     var paramPassword = req.body.password || req.query.password;
     if (req.session.user) {
         console.log('이미 로그인되어 상품 페이지로 이동합니다.');
-        res.redirect('/public/product.html');
+        res.redirect('/product.html');
     } else {
         req.session.user = {
         id: paramId,
@@ -58,20 +58,20 @@ router.route('/process/logout').get(function(req, res) {
         req.session.destroy(function(err) {
             if (err) {throw err;}
             console.log('세션을 삭제하고 로그아웃되었습니다.');
-            res.redirect('/public/login2.html');
+            res.redirect('/login2.html');
         });
     } else {
         console.log('아직 로그인되어있지 않습니다.');
-        res.redirect('/public/login2.html');
+        res.redirect('/login2.html');
     }
 }); 
 
 router.route('/process/product').get(function(req, res) {
     console.log('/process/product 호출됨.');
     if (req.session.user) {
-        res.redirect('/public/product.html');
+        res.redirect('/product.html');
     } else {
-       res.redirect('/public/login2.html');
+       res.redirect('/login2.html');
     }
 }); 
 
